@@ -1,7 +1,9 @@
 version: '3'
 
-# env:
-#   ENV: testing
+env:
+  ENV: unknown_ae
+  REPO_ROOT_DIR:
+    sh: "git rev-parse --show-toplevel"
 
 # dotenv: ['.env']
 
@@ -10,15 +12,37 @@ includes:
   db: 
     taskfile: ./db/Taskfile.yml
     dir: ./db
-  docker: 
-    taskfile: ./docker/Taskfile.yml
-    dir: ./docker
+  langs: 
+    taskfile: ./langs/Taskfile.yml
+    dir: ./langs
   back: 
     taskfile: ./backend/Taskfile.yml
     dir: ./backend
 
 
 tasks:
+
+  compose-down:
+    env:
+      TAG:
+        # Grab the tag from the running container
+        sh: docker ps | awk '{print $2}' | grep -Po '(?<=anderserik/praedict-backend:)\d\.\d\.\d'
+    cmds:
+      - docker compose down
+
+  compose-up-next-prod:
+    env:
+      TAG:
+        sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name' | awk -F. -v OFS=. '{$NF+=1; print}'
+    cmds:
+      - docker compose up -d 
+
+  compose-up-next-dev:
+    env:
+      TAG:
+        sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name' | awk -F. -v OFS=. '{$NF+=1; print}'
+    cmds:
+      - docker compose up -d
 
   build:
     deps:

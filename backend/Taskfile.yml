@@ -9,7 +9,7 @@ env:
 
 tasks:
 
-  docker-build-next:
+  docker-build-next-patch:
     env:
       NEW_TAG:
         sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name' | awk -F. -v OFS=. '{$NF+=1; print}'
@@ -17,7 +17,9 @@ tasks:
       - docker build -t anderserik/praedict-backend:$NEW_TAG .
       # - docker build -t anderserik/praedict-backend:$(git rev-parse --short HEAD) .
   
-  docker-push-next:
+  # Increments the patch version of the lastest tag, and pushes it to Docker Hub.
+  # Requires that same image to have been built already
+  docker-push-next-patch:
     vars:
       LATEST_TAG: test-1.2.3
     env:
@@ -28,9 +30,16 @@ tasks:
     cmds:
       - docker push anderserik/praedict-backend:$NEW_TAG
 
-  up-local:
+
+  # run backend using locally installed deno
+  up-local-dev:
+    env:
+      SQLITE_PATH: 
+        # move to parent directory and append the relative path to the sqlite database
+        sh: "cd {{.ROOT_DIR}}/.. && echo \"$(pwd)/.localdev/db/database.sqlite\" "
     cmds:
-      - deno ./src/server.ts
+      # - echo $SQLITE_PATH
+      - deno task dev
   
   h:
     cmds:

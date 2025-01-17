@@ -1,13 +1,29 @@
 version: '3'
 
-# env:
-#   DIR: db
+env:
+  DIR: db
+  REPO_ROOT_DIR:
+    sh: "git rev-parse --show-toplevel"
 
 
 tasks:
-  init:
+  init:local:
+    env:
+      SQLITE_PATH:
+        sh: "REPO_ROOT_DIR=$(git rev-parse --show-toplevel) && echo $REPO_ROOT_DIR/.localdev/db/database.sqlite"
     cmds:
-      - ./init_db.sh
+      - scripts/init-local.sh
+      # - echo ${REPO_ROOT_DIR}/.localdev/db/
+      # - echo $SQLITE_PATH
+
+  init:volume:
+    env:
+      SQLITE_PATH:
+        sh: "REPO_ROOT_DIR=$(git rev-parse --show-toplevel) && echo $REPO_ROOT_DIR/.localdev/db/database.sqlite"
+    cmds:
+      - scripts/init-volume.sh
+      # - echo ${REPO_ROOT_DIR}/.localdev/db/
+      # - echo $SQLITE_PATH
 
   default:
     cmds: 

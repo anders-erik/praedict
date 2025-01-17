@@ -1,8 +1,9 @@
 #!/bin/bash
 
-DB_FILE="database.sqlite"
+# DB_FILE="database.sqlite"
+DB_FILE=$SQLITE_PATH
 SCHEMA_FILE="schema.sql"
-DATA_FILE="data.sql"
+DATA_FILE="init-data.sql"
 
 # Remove existing database if it exists
 if [ -f "$DB_FILE" ]; then

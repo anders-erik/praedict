@@ -1,9 +1,15 @@
 
 services:
+
   backend:
-    image: anderserik/praedict-backend:0.0.1
+    container_name: praedict-backend
+    image: anderserik/praedict-backend:$TAG
     ports:
       - "3000:3000" # Expose port 3000 for the Deno app
     volumes:
-      - ./backend/src:/app/src # Mount source code for live updates
-    command: deno run --allow-net --allow-read src/server.ts
+      - sqlite-data:/db
+    # Warn: Setting the command in comopose will override the command in the Dockerfile
+    # command: deno run --allow-net --allow-read  src/server.ts
+
+volumes:
+  sqlite-data:
