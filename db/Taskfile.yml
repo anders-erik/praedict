@@ -1,0 +1,14 @@
+version: '3'
+
+# env:
+#   DIR: db
+
+
+tasks:
+  init:
+    cmds:
+      - ./init_db.sh
+
+  default:
+    cmds: 
+      - echo current dir = {{.TASKFILE_DIR}}

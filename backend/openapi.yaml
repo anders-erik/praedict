@@ -1,30 +1,37 @@
 openapi: 3.0.3
 info:
-  title: Code Snippets API
+  title: Code Snippet Management API
+  description: API for managing code snippets, their sources, environments, and guesses.
   version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server
 paths:
-  /snippets:
+  /sources:
     get:
-      summary: Fetch all code snippets
+      summary: Retrieve all sources
       responses:
         '200':
-          description: A list of code snippets
+          description: A list of sources
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    title:
-                      type: string
-                    content:
-                      type: string
-  /snippets/{id}/guesses:
+                  $ref: '#/components/schemas/Source'
+    post:
+      summary: Create a new source
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Source'
+      responses:
+        '201':
+          description: Source created
+  /sources/{id}:
     get:
-      summary: Fetch guesses for a specific snippet
+      summary: Retrieve a specific source
       parameters:
         - name: id
           in: path
@@ -33,17 +40,184 @@ paths:
             type: integer
       responses:
         '200':
+          description: The requested source
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+    put:
+      summary: Update a specific source
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Source'
+      responses:
+        '200':
+          description: Source updated
+    delete:
+      summary: Delete a specific source
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Source deleted
+  /environments:
+    get:
+      summary: Retrieve all environments
+      responses:
+        '200':
+          description: A list of environments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Environment'
+    post:
+      summary: Create a new environment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Environment'
+      responses:
+        '201':
+          description: Environment created
+  /code_snippets:
+    get:
+      summary: Retrieve all code snippets
+      responses:
+        '200':
+          description: A list of code snippets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CodeSnippet'
+    post:
+      summary: Create a new code snippet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeSnippet'
+      responses:
+        '201':
+          description: Code snippet created
+  /guesses:
+    get:
+      summary: Retrieve all guesses
+      responses:
+        '200':
           description: A list of guesses
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    guess_text:
-                      type: string
-                    is_correct:
-                      type: boolean
+                  $ref: '#/components/schemas/Guess'
+    post:
+      summary: Create a new guess
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Guess'
+      responses:
+        '201':
+          description: Guess created
+components:
+  schemas:
+    Source:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: integer
+        type:
+          type: string
+        url:
+          type: string
+        author:
+          type: string
+        read_date:
+          type: string
+          format: date
+        created_at_unix:
+          type: integer
+        modified_at_unix:
+          type: integer
+    Environment:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: integer
+        image_name:
+          type: string
+        type:
+          type: string
+        created_at_unix:
+          type: integer
+        modified_at_unix:
+          type: integer
+    CodeSnippet:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        run_command:
+          type: string
+        std_out:
+          type: string
+        std_err:
+          type: string
+        notes:
+          type: string
+        quality_rank:
+          type: integer
+        environment_uuid:
+          type: string
+        source_uuid:
+          type: integer
+        created_at_unix:
+          type: integer
+        modified_at_unix:
+          type: integer
+    Guess:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: integer
+        guess_text:
+          type: string
+        is_correct:
+          type: boolean
+        snippet_uuid:
+          type: integer
+        created_at_unix:
+          type: integer
+        modified_at_unix:
+          type: integer

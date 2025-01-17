@@ -1,0 +1,43 @@
+version: '3'
+
+# env:
+#   ENV: testing
+
+# dotenv: ['.env']
+
+
+includes:
+  db: 
+    taskfile: ./db/Taskfile.yml
+    dir: ./db
+  docker: 
+    taskfile: ./docker/Taskfile.yml
+    dir: ./docker
+  back: 
+    taskfile: ./backend/Taskfile.yml
+    dir: ./backend
+
+
+tasks:
+
+  build:
+    deps:
+      - assets
+    cmds:
+      - echo "BUILDING"
+      - task: assets
+
+  assets:
+    cmds:
+      - echo "ASSETS"
+
+  default:
+    cmds: 
+      - echo {{.ROOT_DIR}}
+      - echo "DEFAULT"
+      - echo "=============================="
+      - echo "Environment Info:"
+      - echo Taskfile Directory = {{.ROOT_DIR}}
+      - echo Running Task = {{.TASK}}
+      - echo "=============================="
+      # silent: true

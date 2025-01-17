@@ -1,0 +1,39 @@
+version: '3'
+
+
+env:
+  DIR: backend
+  LATEST_TAG: 1.2.3
+
+
+
+tasks:
+
+  docker-build-next:
+    env:
+      NEW_TAG:
+        sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name' | awk -F. -v OFS=. '{$NF+=1; print}'
+    cmds:
+      - docker build -t anderserik/praedict-backend:$NEW_TAG .
+      # - docker build -t anderserik/praedict-backend:$(git rev-parse --short HEAD) .
+  
+  docker-push-next:
+    vars:
+      LATEST_TAG: test-1.2.3
+    env:
+      LATEST_TAG:
+        # sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name'
+      NEW_TAG:
+        sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name' | awk -F. -v OFS=. '{$NF+=1; print}'
+    cmds:
+      - docker push anderserik/praedict-backend:$NEW_TAG
+
+  up-local:
+    cmds:
+      - deno ./src/server.ts
+  
+  h:
+    cmds:
+      - echo ROOT_DIR = {{.ROOT_DIR}}
+      - echo TASKFILE_DIR  = {{.TASKFILE_DIR}}
+    silent: true

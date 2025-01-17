@@ -1,0 +1,12 @@
+{
+  "tasks": {
+    "run": "deno run src/main.ts",
+    "dev": "deno run --allow-net --watch src/main.ts",
+    "test": "deno test --watch main_test.ts",
+    "fmt": "deno fmt --watch src/main.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "@oak": "jsr:@oak/oak"
+  }
+}

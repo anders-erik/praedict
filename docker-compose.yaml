@@ -1,0 +1,9 @@
+
+services:
+  backend:
+    image: anderserik/praedict-backend:0.0.1
+    ports:
+      - "3000:3000" # Expose port 3000 for the Deno app
+    volumes:
+      - ./backend/src:/app/src # Mount source code for live updates
+    command: deno run --allow-net --allow-read src/server.ts
