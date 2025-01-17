@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  title: Code Snippets API
+  version: 1.0.0
+paths:
+  /snippets:
+    get:
+      summary: Fetch all code snippets
+      responses:
+        '200':
+          description: A list of code snippets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    content:
+                      type: string
+  /snippets/{id}/guesses:
+    get:
+      summary: Fetch guesses for a specific snippet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of guesses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    guess_text:
+                      type: string
+                    is_correct:
+                      type: boolean

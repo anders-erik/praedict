@@ -1,0 +1,5 @@
+backend/db/database.sqlite
+
+.env
+
+tmp/
