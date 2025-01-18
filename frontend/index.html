@@ -1,0 +1,602 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        * {
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+        }
+
+        :root {
+            --dark-1: rgb(31, 29, 37);
+            --light-1: rgb(185, 189, 244);
+            --accent-1: rgb(92, 0, 113);
+        }
+        .hl {
+            border: solid white 1px;
+        }
+        header {
+            height: 50px;
+            width: 100%;
+        }
+        #toolbar {
+            justify-content: end;
+            align-items: center;
+            height: 90%;
+            width: 100%;
+        }
+        .toolbar-element {
+            /* background-color: aqua; */
+            height: 30px;
+            width: 80px;
+            position: static;
+        }
+        #lang-toolbar-element:hover #lang-list {
+            display: flex;
+        }
+        #lang-list {
+            display: none;
+            /* display: flex; */
+            flex-direction: column;
+            justify-content: center;
+
+            width: 140px;
+            position: absolute;
+            top: 30px;
+            right: 80px;
+            /* margin-top: 100px; */
+
+            border: solid var(--accent-1) 1px;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body {
+            margin: 0px;
+            padding: 0px;
+            color: aliceblue;
+            background-color: var(--dark-1);
+            overflow: hidden;
+            height: 100%;
+        }
+        #root {
+            min-width: 90vw;
+            border-left: solid var(--accent-1) 2px;
+        }
+
+       
+
+        #content {
+            flex-grow: 1;
+            justify-content: start;
+        }
+
+        code {
+            padding: 10px;
+            width: 100%;
+            height: 65%;
+            background-color: var(--dark-1);
+            /* border: solid var(--light-1) 2px; */
+            overflow: scroll;
+            scrollbar-width: none;
+        }
+
+        #drawer {
+            flex-grow: 1;
+        }
+
+        #output-block {
+            margin: 2px;
+            flex-grow: 1;
+            /* border: solid var(--light-1) 2px; */
+            /* display: none; */
+        }
+        .output-bar {
+            /* display: block; */
+            flex-grow: 1;
+            padding: 5px;
+        }
+        #stdout {
+            /* background-color: blue; */
+            box-shadow: inset 0 0 0 2px blue;
+        }
+        #stderr {
+            box-shadow: inset 0 0 0 2px red;
+            /* background-color: red; */
+        }
+
+
+        #answer-block {
+            margin: 2px;
+            height: 50px;
+            /* flex-grow: 1; */
+            /* border: solid var(--light-1) 2px; */
+        }
+        #answer-block>* {
+            /* width: 50px; */
+            /* flex-grow: 1; */
+            margin: 0 2px 0 2px;
+        }
+
+
+        #accuracy-con {
+            flex-grow: 2;
+        }
+        .accuracy-btn {
+            flex-grow: 1;
+            margin: 0 2px 0 2px;
+            color: var(--dark-1);
+        }
+        .accuracy-btn.selected {
+            box-shadow: inset 0 0 0 4px var(--accent-1);
+        }
+        #answer-btn-correct {
+            background-color: rgba(19, 57, 19, 0.431);
+        }
+        #answer-btn-incorrect {
+            background-color: rgba(84, 13, 13, 0.337);
+        }
+
+        #accuracy-1 {
+            background-color: rgba(255, 0, 0, 0.431);
+        }
+        #accuracy-2 {
+            background-color: rgba(238, 147, 0, 0.431);
+        }
+        #accuracy-3 {
+            background-color: rgba(210, 243, 0, 0.431);
+        }
+        #accuracy-4 {
+            background-color: rgba(105, 174, 0, 0.431);
+        }
+        #accuracy-5 {
+            background-color: rgba(0, 255, 0, 0.431);
+        }
+
+
+        #rank-con {
+            flex-grow: 2;
+        }
+        .rank-btn {
+            flex-grow: 1;
+            margin: 0 2px 0 2px;
+        }
+        .rank-btn.selected {
+            box-shadow: inset 0 0 0 4px var(--accent-1);
+        }
+        #rank-1 {
+            background-color: rgb(255, 255, 255);
+        }
+        #rank-2 {
+            background-color: rgb(189, 189, 189);
+        }
+        #rank-3 {
+            background-color: rgb(127, 127, 127);
+        }
+        #rank-4 {
+            background-color: rgb(63, 63, 63);
+            color: rgb(255, 255, 255);
+        }
+        #rank-5 {
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+
+
+        #show-con {
+            flex-grow: 1;
+        }
+        #show-btn {
+            background-color: var(--dark-1);
+            color: var(--light-1);
+            font-size: large;
+        }
+
+
+        #play-submit {
+            /* display: none; */
+
+            position: absolute;
+
+            align-items: center;
+
+            height: 50%;
+            width: 80%;
+
+            top: 25%;
+            left: 10%;
+
+            border: solid var(--accent-1) 3px;
+            background-color: var(--dark-1);
+
+        }
+        #play-submit.show {
+            display: flex;
+        }
+
+        #note-play_submit {
+            height: 50%;
+            width: 90%;
+            padding: 10px;
+            /* text-align: start; */
+            
+            /* text-align-last: center; */
+        }
+        #but-play_submit {
+            margin-top: 30px;
+            width: 30%;
+            height: 30px;
+        }
+
+
+        .grow {
+            height: 100%;
+            width: 100%;
+        }
+        .flex-vert {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .flex-hori {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+        }
+        .flex-hori > * {
+            height: 100%;
+        }
+        
+
+
+        aside {
+            width: 90%;
+            min-width: 300px;
+            max-width: 400px;
+        }
+        aside.closed {
+            width: 0px;
+            min-width: 0px;
+            max-width: 0px;
+            overflow: hidden;
+        }
+        #aside-btn {
+            height: 35px;
+            width: 35px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        #toast {
+            display: none;
+
+            position: absolute;
+            height: 100px;
+            width: 200px;
+
+            padding: 10px;
+            text-align: start;
+            word-wrap: break-word;
+
+            background-color: rgb(63, 0, 0);
+            color: aliceblue;
+
+            top: 10px;
+            left: calc(100vw/2 - 100px);
+        }
+    </style>
+</head>
+<body class="flex-hori hl">
+    <div id="toast" class="flex-vert"></div>
+
+    <button id="aside-btn">MENU</button>
+    <aside class="closed">
+        <nav class="flex-vert grow">
+            <a href="">PLAY</a>
+            <a href="">ADD</a>
+            <a href="">STATS</a>
+        </nav>
+    </aside>
+
+    <div id="play-submit" class="grow flex-vert">
+
+            <label for="note-play_submit">Note:</label><br>
+            <textarea name=""  id="note-play_submit"></textarea>
+
+            <button id="but-play_submit" onclick="play_submit()">Submit</button>
+
+        
+    </div>
+    
+    <div id="root" class="flex-vert grow">
+        
+        <header>
+            <div id="toolbar" class="flex-hori">
+                <div id="lang-toolbar-element" class="toolbar-element center">
+                    <div class="center">
+                        <div id="selected-lang">RUST</div>
+                        <ul id="lang-list" class="center">
+                            <ol id="rust-select" class="lang-option">RUST</ol>
+                            <ol id="html-select" class="lang-option">HTML</ol>
+                        </ul>
+                    </div>
+                    
+    
+                </div>
+                
+                <menu class="toolbar-element center">OPTIONS</menu>
+            </div>
+        </header>
+        
+        <main class="flex-hori hl">
+            
+            <div id="content" class="hl flex-vert">
+                <code>
+                    asdf <br>
+                    asdf <br>
+                    asdf
+                </code>
+                <div id="drawer" class="flex-vert">
+    
+                    <div id="output-block" class="flex-vert">
+                        <div id="stdout" class="output-bar">asdf</div>
+                        <div id="stderr" class="output-bar">asdf</div>
+                    </div>
+                    <div id="answer-block" class="flex-hori">
+                        <div id="accuracy-con"  class="flex-hori">
+                            <!-- <button id="answer-btn-incorrect" class="correctness-btn">Incorrect</button>
+                            <button id="answer-btn-correct" class="correctness-btn">Correct</button> -->
+
+                            <button id="accuracy-1" class="accuracy-btn">1</button>
+                            <button id="accuracy-2" class="accuracy-btn">2</button>
+                            <button id="accuracy-3" class="accuracy-btn">3</button>
+                            <button id="accuracy-4" class="accuracy-btn">4</button>
+                            <button id="accuracy-5" class="accuracy-btn">5</button>
+                            
+                        </div>
+                        <div id="show-con">
+                            <button id="show-btn" class="grow">SHOW</button>
+                        </div>
+                        <div id="rank-con" class="flex-hori">
+                            <button id="rank-1" class="rank-btn">1</button>
+                            <button id="rank-2" class="rank-btn">2</button>
+                            <button id="rank-3" class="rank-btn">3</button>
+                            <button id="rank-4" class="rank-btn">4</button>
+                            <button id="rank-5" class="rank-btn">5</button>
+                            
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </main>
+        <footer></footer>
+
+    </div>
+
+
+
+    <script>
+        // tag:play-submit
+
+        // verifies the prediction row and POST that row if verified
+
+        function play_submit(event){
+
+            prediction_row.note = document.getElementById("note-play_submit").value;
+            console.table(prediction_row)
+
+            if (prediction_row.snippet_uuid === -1){
+                log_error("Unable to verify snippet uuid. Nothing submitted.");
+                return;
+
+            } else if(prediction_row.snippet_rank === -1){
+                log_error("Unable to verify snippet_rank. Nothing submitted.");
+                return;
+            } else if (prediction_row.accuracy === -1) {
+                log_error("Unable to verify prediction accuracy. Nothing submitted.");
+                return;
+            }
+
+
+
+        }
+
+    </script>
+
+    <script>
+        // tag: logging
+
+        // log to console and display toast
+        function log_error(error_string){
+            console.error(error_string);
+            toast_error(error_string);
+        }
+
+        function toast_error(toast_string){
+            var toast = document.getElementById("toast");
+            toast.textContent = toast_string;
+            toast.style.display = "flex";
+
+            setTimeout(hide_toast,5000);
+            function hide_toast(){
+                toast.style.display = "none";
+            }
+        }
+    </script>
+
+    <script>
+        // tag:menu-btn click
+        document.getElementById("aside-btn").addEventListener("click", menu_clicked);
+        function menu_clicked(event){
+            var aside_element = document.getElementsByTagName("aside");
+            if(aside_element[0].classList.contains('closed')){
+                aside_element[0].classList.remove('closed');
+            } else {
+                aside_element[0].classList.add('closed');
+            }
+        }
+    </script>
+
+    <script>
+        // tag:lang-option click
+        let lang_options = document.getElementsByClassName("lang-option");
+        console.log(lang_options[0].textContent)
+        console.log(lang_options.length)
+        for (let i = 0; i < lang_options.length; i++) {
+            lang_options[i].addEventListener("click", clicked_lang_option);
+        }
+        function clicked_lang_option(event){
+            // console.log(event.target.textContent);
+            document.getElementById("selected-lang").textContent = event.target.textContent;
+            
+        }
+    </script>
+
+    <script>
+        // tag: prediction user input
+
+        // - listens for the users snippet response
+        // - stores the current state in 'prediction_row'
+
+
+        var prediction_row = {
+            accuracy: -1,
+            snippet_rank: -1,
+            note: "",
+            snippet_uuid: -1,
+        }
+
+        var showing = -1;
+
+        let resonse_buttons = [
+            document.getElementById("accuracy-1"),
+            document.getElementById("accuracy-2"),
+            document.getElementById("accuracy-3"),
+            document.getElementById("accuracy-4"),
+            document.getElementById("accuracy-5"),
+            document.getElementById("show-btn"),
+            document.getElementById("rank-1"),
+            document.getElementById("rank-2"),
+            document.getElementById("rank-3"),
+            document.getElementById("rank-4"),
+            document.getElementById("rank-5"),
+        ];
+
+        resonse_buttons.forEach((btn) => {
+            btn.addEventListener("click", resonse_button_handler)
+        })
+
+        function resonse_button_handler(event){
+            const target = event.target;
+            const target_id = event.target.id;
+
+            // clear rank selection
+            if (target.classList.contains("rank-btn")){
+                let rank_buts = document.getElementsByClassName("rank-btn");
+                for (let i = 0; i < rank_buts.length; i++) {
+                    rank_buts[i].classList.remove("selected");
+                }
+            }
+
+            // clear correctness selection
+            if (target.classList.contains("accuracy-btn")) {
+                let correctness_buts = document.getElementsByClassName("accuracy-btn");
+                for (let i = 0; i < correctness_buts.length; i++) {
+                    correctness_buts[i].classList.remove("selected");
+                }
+            }
+
+            switch (target_id) {
+                case "answer-btn-correct":
+                    correct_prediction = true;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+
+                case "answer-btn-incorrect":
+                    correct_prediction = false;
+                    // console.log("correct_prediction =", correct_prediction)
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+
+                case "show-btn":
+                    // console.log("correct_prediction =", correct_prediction)
+                    showing = true;
+                    break;
+
+                case "accuracy-1":
+                    prediction_row.accuracy = 1;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+                case "accuracy-2":
+                    prediction_row.accuracy = 2;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+                case "accuracy-3":
+                    prediction_row.accuracy = 3;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+                case "accuracy-4":
+                    prediction_row.accuracy = 4;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+                case "accuracy-5":
+                    rank_rating = 5;
+                    prediction_row.accuracy = 5;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+
+
+                case "rank-1":
+                    rank_rating = 1;
+                    prediction_row.snippet_rank = 1;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+                case "rank-2":
+                    rank_rating = 2;
+                    prediction_row.snippet_rank = 2;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+                case "rank-3":
+                    rank_rating = 3;
+                    prediction_row.snippet_rank = 3;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+                case "rank-4":
+                    rank_rating = 4;
+                    prediction_row.snippet_rank = 4;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+                case "rank-5":
+                    rank_rating = 5;
+                    prediction_row.snippet_rank = 5;
+                    document.getElementById(target_id).classList.add("selected");
+                    break;
+
+            
+                default:
+                    console.error("Tried to handle unknown button click.")
+                    break;
+            }
+
+            // if all have been changed from initial value, then we enable submission
+            if (prediction_row.snippet_rank!==-1 && prediction_row.accuracy!==-1 && showing!==-1){
+                console.log("SUBMIT ENABLED");
+                document.getElementById("play-submit").classList.add('show');
+            }
+        }
+
+    </script>
+
+</body>
+</html>

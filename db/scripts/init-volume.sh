@@ -19,8 +19,12 @@ echo "Database initialized with schema: $SCHEMA_FILE"
 sqlite3 "$TMP_DB_FILE" < "$DATA_FILE"
 echo "Database initialized with data : $DATA_FILE."
 
-
+# Mount newly created file; associate new volume with mounted file
 docker run --rm \
   -v $TMP_DB_FILE:/db/database.sqlite \
   -v sqlite-data_init:/db \
   alpine 
+
+# docker run --rm -v sqlite-data_init:/db alpine -it -c "/bin/sh"
+
+# rm $TMP_DB_FILE

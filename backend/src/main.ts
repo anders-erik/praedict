@@ -33,6 +33,8 @@ router.get("/hello/:name", (context) => {
 
 const app = new Application();
 
+
+
 app.addEventListener("error", (evt) => {
   // Will log the thrown error to the console.
   console.log(evt.error);

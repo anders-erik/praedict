@@ -25,6 +25,10 @@ tasks:
       # - echo ${REPO_ROOT_DIR}/.localdev/db/
       # - echo $SQLITE_PATH
 
+  init-volume-info:
+    cmds:
+      - sudo ls -la /var/lib/docker/volumes/sqlite-data_init/_data
+
   default:
     cmds: 
       - echo current dir = {{.TASKFILE_DIR}}

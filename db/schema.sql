@@ -50,11 +50,12 @@ CREATE TABLE IF NOT EXISTS code_snippet (
 
 
 -- Source of the code_snippets
-CREATE TABLE IF NOT EXISTS guess (
+CREATE TABLE IF NOT EXISTS output_prediction (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     uuid INTEGER NOT NULL,
-    guess_text TEXT NOT NULL,
-    is_correct BOOLEAN NOT NULL,
+    accuracy BOOLEAN NOT NULL,
+    snippet_rank TEXT NOT NULL,
+    note TEXT NOT NULL DEFAULT "",
 
     created_at_unix INTEGER DEFAULT (unixepoch()),
     modified_at_unix INTEGER DEFAULT (unixepoch()),
