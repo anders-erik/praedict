@@ -10,6 +10,25 @@ services:
       - sqlite-data:/db
     # Warn: Setting the command in comopose will override the command in the Dockerfile
     # command: deno run --allow-net --allow-read  src/server.ts
+    networks:
+      - app-network
+
+
+  nginx:
+    container_name: praedict-nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/cert:/etc/nginx/cert
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./frontend:/usr/share/nginx/html
+    networks:
+      - app-network
+
+networks:
+  app-network:
 
 volumes:
   sqlite-data:

@@ -6,3 +6,6 @@ backend/db/database.sqlite
 tmp/
 .praedict/
 .localdev/
+
+nginx/cert/
+nginx/certs/
