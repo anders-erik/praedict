@@ -1,7 +1,7 @@
 -- Create table for guesses
 CREATE TABLE IF NOT EXISTS source (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    uuid INTEGER NOT NULL,
+    uuid TEXT NOT NULL,
     type TEXT NOT NULL DEFAULT "",
     url TEXT NOT NULL DEFAULT "",
     author TEXT NOT NULL DEFAULT "",
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS source (
 -- Envirnment in which the snippets run
 CREATE TABLE IF NOT EXISTS environment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    uuid INTEGER NOT NULL,
+    uuid TEXT NOT NULL,
     image_name TEXT NOT NULL, -- e.g. anderserik/rust-docker-1.84
     type TEXT NOT NULL DEFAULT "", -- e.g. docker, virtualbox, etc.
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS environment (
 -- Create table for code snippets
 CREATE TABLE IF NOT EXISTS code_snippet (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    uuid INTEGER,
+    uuid TEXT NOT NULL,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     run_command TEXT NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS code_snippet (
 -- Source of the code_snippets
 CREATE TABLE IF NOT EXISTS prediction (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    uuid INTEGER NOT NULL,
+    uuid TEXT NOT NULL,
     accuracy BOOLEAN NOT NULL,
     snippet_rank TEXT NOT NULL,
     note TEXT NOT NULL DEFAULT "",
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS prediction (
     created_at_unix INTEGER DEFAULT (unixepoch()),
     modified_at_unix INTEGER DEFAULT (unixepoch()),
 
-    snippet_uuid,
-    FOREIGN KEY (snippet_uuid) REFERENCES code_snippet (uuid)
+    snippet_uuid TEXT--,
+    -- FOREIGN KEY (snippet_uuid) REFERENCES code_snippet (uuid)
 );
 

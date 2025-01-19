@@ -4,6 +4,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('snippet');
+        if(!myParam)
+            console.log("No snippet provided.");
+            
+        
+    </script>
+
     <style>
 
         * {
@@ -18,7 +27,7 @@
             --accent-1: rgb(92, 0, 113);
         }
         .hl {
-            border: solid white 1px;
+            /* border: solid white 1px; */
         }
         header {
             height: 50px;
@@ -70,7 +79,8 @@
         }
         #root {
             min-width: 90vw;
-            border-left: solid var(--accent-1) 2px;
+            /* border-left: solid var(--accent-1) 2px; */
+            box-shadow: 0 0 0 2px var(--accent-1);
         }
 
        
@@ -88,6 +98,9 @@
             /* border: solid var(--light-1) 2px; */
             overflow: scroll;
             scrollbar-width: none;
+
+            display: block;
+            white-space: pre-wrap ;
         }
 
         #drawer {
@@ -95,7 +108,7 @@
         }
 
         #output-block {
-            margin: 2px;
+            margin: 5px;
             flex-grow: 1;
             /* border: solid var(--light-1) 2px; */
             /* display: none; */
@@ -104,6 +117,7 @@
             /* display: block; */
             flex-grow: 1;
             padding: 5px;
+            margin: 10px;
         }
         #stdout {
             /* background-color: blue; */
@@ -334,14 +348,14 @@
     
                 </div>
                 
-                <menu class="toolbar-element center">OPTIONSs</menu>
+                <menu class="toolbar-element center">OPTIONS</menu>
             </div>
         </header>
         
         <main class="flex-hori hl">
             
             <div id="content" class="hl flex-vert">
-                <code>
+                <code id="code">
                     asdf <br>
                     asdf <br>
                     asdf
@@ -384,10 +398,22 @@
 
     </div>
 
-    <script>
+    <script type="module">
+
         // tag: api
-        var code_snippet_context = fetch(`/api/`);
-        console.log(code_snippet_context);
+        var snippet_context_request = await fetch(`/api/snippet_context`);
+        const snippet_context = await snippet_context_request.json();
+        console.log(snippet_context);
+
+        let snippet_uuid = snippet_context.code_snippet[0].uuid;
+        console.log(snippet_uuid);
+
+        window.prediction_row.snippet_uuid = snippet_uuid;
+
+        window.code.textContent = snippet_context.code_snippet[0].content;
+
+        window.stdout.textContent = snippet_context.code_snippet[0].std_out;
+        window.stderr.textContent = snippet_context.code_snippet[0].std_err;
         
     </script>
 
@@ -414,8 +440,17 @@
                 return;
             }
 
-
-
+            // POST prediction_row
+            fetch(`/api/prediction`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(prediction_row),
+            }).catch
+            (error => {
+                log_error("Failed to submit prediction.");
+            });
         }
 
     </script>

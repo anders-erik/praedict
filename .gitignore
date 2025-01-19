@@ -7,6 +7,9 @@ tmp/
 .praedict/
 .localdev/
 
+node_modules/
+dist
+
 nginx/cert/
 nginx/certs/
 

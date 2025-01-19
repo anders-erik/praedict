@@ -24,6 +24,28 @@ router.get("/hello", (context) => {
 
 
 // random snippet
+router.post("/prediction", async (context) => {
+  
+  const data = context.request.body;
+  const json = await data.json();
+  console.log(json);
+  const new_uuid = crypto.randomUUID().replace(/-/g, '').substring(0, 8);  
+  const accuracy = json.accuracy, snippet_rank = json.snippet_rank, note = json.note, snippet_uuid = json.snippet_uuid.trim();
+  console.log("asdf", new_uuid, accuracy, snippet_rank, note, snippet_uuid);
+
+  let insert_prediction = db.query(
+    "INSERT INTO prediction (uuid, accuracy, snippet_rank, note, snippet_uuid) VALUES (?, ?, ?, ?, ?);",
+     [new_uuid, accuracy, snippet_rank, note, snippet_uuid]
+  );
+
+  let x = db.query("Select * FROM code_snippet");
+  console.log(x);
+  // let source = db.query('SELECT * FROM source WHERE uuid = ?;', [source_uuid]);
+  context.response.body = {result: "success"};
+});
+
+
+// random snippet
 router.get("/code_snippet", (context) => {
   console.log(context.request.method);
   let code_snippets = db.queryEntries(`SELECT * FROM code_snippet;`)
@@ -110,6 +132,8 @@ const app = new Application();
 
 app.addEventListener("error", (evt) => {
   // Will log the thrown error to the console.
+  console.log("DIPSHIT");
+  
   console.log(evt.error);
 });
 
