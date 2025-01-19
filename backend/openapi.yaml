@@ -4,7 +4,7 @@ info:
   description: API for managing code snippets, their sources, environments, and guesses.
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: http://praedict.anderserik.com
     description: Local development server
 paths:
   /sources:
@@ -116,28 +116,28 @@ paths:
       responses:
         '201':
           description: Code snippet created
-  /guesses:
+  /predictions:
     get:
-      summary: Retrieve all guesses
+      summary: Retrieve all predictions
       responses:
         '200':
-          description: A list of guesses
+          description: A list of predictions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Guess'
+                  $ref: '#/components/schemas/Prediction'
     post:
-      summary: Create a new guess
+      summary: Create a new predictions
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Guess'
+              $ref: '#/components/schemas/Prediction'
       responses:
         '201':
-          description: Guess created
+          description: Prediction created
 components:
   schemas:
     Source:
@@ -202,19 +202,22 @@ components:
           type: integer
         created_at_unix:
           type: integer
+          readOnly: true
         modified_at_unix:
           type: integer
-    Guess:
+    Prediction:
       type: object
       properties:
         id:
           type: integer
         uuid:
           type: integer
-        guess_text:
+        accuracy:
           type: string
-        is_correct:
+        snippet_rank:
           type: boolean
+        note:
+          type: string
         snippet_uuid:
           type: integer
         created_at_unix:

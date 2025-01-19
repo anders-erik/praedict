@@ -1,8 +1,8 @@
 // import { Application, Router } from "jsr:@oak/oak";
 import { Application, Router } from "@oak";
 
-import { init } from "./db.ts";
-init(); // dummy init to make sure the db is created
+import { db } from "./db.ts";
+// init(); // dummy init to make sure the db is created
 
 
 export function add(a: number, b: number): number {
@@ -14,11 +14,84 @@ const PORT = 3000;
 const router = new Router();
 
 
-
-router.get("/hello", (context) => {
+router.get("/env", (context) => {
   const sqlite_path = Deno.env.get("SQLITE_PATH");
   context.response.body = `sqlite_path = ${sqlite_path} \n `;
 });
+router.get("/hello", (context) => {
+  context.response.body = `Hello there! \n `;
+});
+
+
+// random snippet
+router.get("/code_snippet", (context) => {
+  console.log(context.request.method);
+  let code_snippets = db.queryEntries(`SELECT * FROM code_snippet;`)
+
+  const snippet_count = code_snippets.length;
+  const snippet_index = Math.floor(Math.random() * snippet_count);
+
+  const code_snippet = code_snippets[snippet_index];
+
+  context.response.body = {
+    code_snippet: code_snippet,
+  };
+
+});
+
+router.get("/code_snippet_json", (context) => {
+  console.log(context.request.method);
+  let code_snippet = db.queryEntries(
+`SELECT 
+  json_object(
+    'id', id, 
+    'title', title, 
+    'content', content
+  ) as obob 
+ FROM code_snippet;`
+  );
+
+  console.log(code_snippet);
+
+  const snippet_count = code_snippet.length;
+  const snippet_index = Math.floor(Math.random() * snippet_count);
+
+  const snippet = code_snippet[snippet_index].snippet;
+
+  context.response.body = code_snippet;
+});
+
+
+
+
+// random snippet context
+router.get("/snippet_context", (context) => {
+  console.log(context.request.method);
+  let code_snippet = db.queryEntries(`SELECT * FROM code_snippet;`)
+
+  const snippet_count = code_snippet.length;
+  const snippet_index = Math.floor(Math.random()*snippet_count);
+
+
+  let source_uuid: string = code_snippet[snippet_index].source_uuid;
+  let environment_uuid: string = code_snippet[snippet_index].environment_uuid;
+  // console.log(code_snippet[0].source_uuid);
+  
+  // let source = db.queryEntries(`SELECT * FROM source WHERE uuid = ${code_snippet[0].source_uuid};`)
+  let source = db.query('SELECT * FROM source WHERE uuid = ?;', [source_uuid]);
+  let environment = db.queryEntries('SELECT * FROM environment WHERE uuid = ?;', [environment_uuid]);
+  
+  console.log(source);
+  
+  // let environment = db.queryEntries(`SELECT * FROM environment;`)
+  context.response.body = {
+    code_snippet: code_snippet,
+    source: source,
+    environment: environment,
+  };
+});
+
+
 
 router.get("/", (context) => {
   console.log(context.request.method);

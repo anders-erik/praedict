@@ -23,7 +23,7 @@ try {
     Deno.mkdir(db_dir, { recursive: true });
 }
 
-const db = new DB(SQLITE_PATH);
+export const db = new DB(SQLITE_PATH);
 
 db.execute(`
 CREATE TABLE IF NOT EXISTS people (
@@ -31,3 +31,10 @@ id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT
 )
 `);
+
+// export function get_db() {
+//     return db;
+// }
+
+// let code_snippets = db.queryEntries("SELECT * FROM code_snippet;")
+// console.log(code_snippets);

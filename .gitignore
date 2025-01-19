@@ -9,3 +9,8 @@ tmp/
 
 nginx/cert/
 nginx/certs/
+
+openapi-client
+openapi-postman-backend
+openapi-docs-html
+

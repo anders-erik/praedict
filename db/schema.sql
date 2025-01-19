@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS code_snippet (
     run_command TEXT NOT NULL,
     std_out TEXT NOT NULL,
     std_err TEXT NOT NULL,
-    notes TEXT NOT NULL,
+    note TEXT NOT NULL,
     quality_rank INTEGER NOT NULL,
 
     created_at_unix INTEGER DEFAULT (unixepoch()),
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS code_snippet (
 
 
 -- Source of the code_snippets
-CREATE TABLE IF NOT EXISTS output_prediction (
+CREATE TABLE IF NOT EXISTS prediction (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     uuid INTEGER NOT NULL,
     accuracy BOOLEAN NOT NULL,
@@ -63,3 +63,4 @@ CREATE TABLE IF NOT EXISTS output_prediction (
     snippet_uuid,
     FOREIGN KEY (snippet_uuid) REFERENCES code_snippet (uuid)
 );
+

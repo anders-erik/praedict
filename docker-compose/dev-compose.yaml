@@ -1,0 +1,39 @@
+
+services:
+
+  # Mimicks the built image bu with live mountpoints for live reloads
+  backend:
+    container_name: praedict-backend
+    image: denoland/deno:alpine
+    ports:
+      - "3000:3000" # Expose port 3000 for direct http endpoint
+    working_dir: /app
+    environment:
+      SQLITE_PATH: /db/database.sqlite
+    volumes:
+      - ../backend:/app/
+      - ../.localdev/db:/db
+    command: deno task dev
+    networks:
+      - app-network
+    
+
+
+  nginx:
+    container_name: praedict-nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../nginx/cert:/etc/nginx/cert
+      - ../nginx/conf.d:/etc/nginx/conf.d
+      - ../frontend:/usr/share/nginx/html
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  sqlite-data:

@@ -30,19 +30,27 @@ tasks:
     cmds:
       - docker compose down
 
-  compose-up-next-prod:
+  compose-prod-up-next:
     env:
       TAG:
         sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name' | awk -F. -v OFS=. '{$NF+=1; print}'
     cmds:
       - docker compose up -d 
 
-  compose-up-next-dev:
+  compose-dev-up-next:
     env:
       TAG:
         sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name' | awk -F. -v OFS=. '{$NF+=1; print}'
     cmds:
-      - docker compose up
+      - docker compose up 
+
+  compose-dev:
+    env:
+      TAG:
+        # latest
+        sh: curl -s https://hub.docker.com/v2/repositories/anderserik/praedict-backend/tags?page_size=5 | jq -r '.results[0].name'
+    cmds:
+      - docker compose -f ./docker-compose/dev-compose.yaml up
 
   build:
     deps:

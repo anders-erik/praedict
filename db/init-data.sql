@@ -29,7 +29,7 @@ INSERT INTO code_snippet (  uuid,
                             run_command, 
                             std_out, 
                             std_err, 
-                            notes, 
+                            note, 
                             quality_rank,
 
                             environment_uuid, 

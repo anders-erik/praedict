@@ -41,6 +41,21 @@ tasks:
       # - echo $SQLITE_PATH
       - deno task dev
   
+  openapi-generate-client:
+    cmds:
+      - openapi-generator-cli generate -i ./openapi.yaml -g javascript -o ./openapi-client
+      - cd ./openapi-client && npm install && npm run build
+  
+  openapi-generate-postman-backend:
+    cmds:
+      - openapi-generator-cli generate -i ./openapi.yaml -g postman-collection -o ./openapi-postman-backend
+      # - cd ./openapi-client && npm install && npm run build
+
+  openapi-generate-docs-html:
+    cmds:
+      - openapi-generator-cli generate -i ./openapi.yaml -g html -o ./openapi-docs-html
+
+
   h:
     cmds:
       - echo ROOT_DIR = {{.ROOT_DIR}}
