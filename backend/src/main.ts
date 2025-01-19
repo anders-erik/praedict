@@ -28,18 +28,18 @@ router.post("/prediction", async (context) => {
   
   const data = context.request.body;
   const json = await data.json();
-  console.log(json);
+  // console.log(json);
   const new_uuid = crypto.randomUUID().replace(/-/g, '').substring(0, 8);  
   const accuracy = json.accuracy, snippet_rank = json.snippet_rank, note = json.note, snippet_uuid = json.snippet_uuid.trim();
-  console.log("asdf", new_uuid, accuracy, snippet_rank, note, snippet_uuid);
+  // console.log("asdf", new_uuid, accuracy, snippet_rank, note, snippet_uuid);
 
   let insert_prediction = db.query(
     "INSERT INTO prediction (uuid, accuracy, snippet_rank, note, snippet_uuid) VALUES (?, ?, ?, ?, ?);",
      [new_uuid, accuracy, snippet_rank, note, snippet_uuid]
   );
 
-  let x = db.query("Select * FROM code_snippet");
-  console.log(x);
+  // let x = db.query("Select * FROM code_snippet");
+  // console.log(x);
   // let source = db.query('SELECT * FROM source WHERE uuid = ?;', [source_uuid]);
   context.response.body = {result: "success"};
 });
@@ -88,11 +88,13 @@ router.get("/code_snippet_json", (context) => {
 
 // random snippet context
 router.get("/snippet_context", (context) => {
-  console.log(context.request.method);
+  // console.log(context.request.method);
   let code_snippet = db.queryEntries(`SELECT * FROM code_snippet;`)
 
   const snippet_count = code_snippet.length;
   const snippet_index = Math.floor(Math.random()*snippet_count);
+  console.log("snippet_index = ", snippet_index);
+  
 
 
   let source_uuid: string = code_snippet[snippet_index].source_uuid;
@@ -103,11 +105,11 @@ router.get("/snippet_context", (context) => {
   let source = db.query('SELECT * FROM source WHERE uuid = ?;', [source_uuid]);
   let environment = db.queryEntries('SELECT * FROM environment WHERE uuid = ?;', [environment_uuid]);
   
-  console.log(source);
+  // console.log(source);
   
   // let environment = db.queryEntries(`SELECT * FROM environment;`)
   context.response.body = {
-    code_snippet: code_snippet,
+    code_snippet: code_snippet[snippet_index],
     source: source,
     environment: environment,
   };

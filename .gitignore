@@ -12,6 +12,7 @@ dist
 
 nginx/cert/
 nginx/certs/
+cert/
 
 openapi-client
 openapi-postman-backend

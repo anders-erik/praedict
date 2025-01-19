@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
     <title>Document</title>
 
     <script>
@@ -110,6 +110,9 @@
         #output-block {
             margin: 5px;
             flex-grow: 1;
+            
+            max-height: 50vh;
+
             /* border: solid var(--light-1) 2px; */
             /* display: none; */
         }
@@ -118,6 +121,14 @@
             flex-grow: 1;
             padding: 5px;
             margin: 10px;
+
+            max-height: 35vh;
+
+            overflow-y: scroll;
+            scrollbar-width: none;
+
+            display: block;
+            white-space: pre-wrap ;
         }
         #stdout {
             /* background-color: blue; */
@@ -214,10 +225,13 @@
             color: var(--light-1);
             font-size: large;
         }
+        #show-btn.selected {
+            box-shadow: inset 0 0 0 4px var(--accent-1);
+        }
 
 
         #play-submit {
-            /* display: none; */
+            display: none;
 
             position: absolute;
 
@@ -241,6 +255,10 @@
             height: 50%;
             width: 90%;
             padding: 10px;
+
+            background-color: var(--dark-1);
+            color: var(--light-1);
+            box-shadow: inset 0 0 0 2px var(--light-1);
             /* text-align: start; */
             
             /* text-align-last: center; */
@@ -302,7 +320,7 @@
             text-align: start;
             word-wrap: break-word;
 
-            background-color: rgb(63, 0, 0);
+            background-color: rgb(0, 0, 0);
             color: aliceblue;
 
             top: 10px;
@@ -356,15 +374,14 @@
             
             <div id="content" class="hl flex-vert">
                 <code id="code">
-                    asdf <br>
-                    asdf <br>
-                    asdf
+                    CODE <br>
+                    PLACEHOLDER <br>
                 </code>
                 <div id="drawer" class="flex-vert">
     
                     <div id="output-block" class="flex-vert">
-                        <div id="stdout" class="output-bar">asdf</div>
-                        <div id="stderr" class="output-bar">asdf</div>
+                        <div id="stdout" class="output-bar"></div>
+                        <div id="stderr" class="output-bar"></div>
                     </div>
                     <div id="answer-block" class="flex-hori">
                         <div id="accuracy-con"  class="flex-hori">
@@ -405,15 +422,14 @@
         const snippet_context = await snippet_context_request.json();
         console.log(snippet_context);
 
-        let snippet_uuid = snippet_context.code_snippet[0].uuid;
+        let snippet_uuid = snippet_context.code_snippet.uuid;
         console.log(snippet_uuid);
 
         window.prediction_row.snippet_uuid = snippet_uuid;
 
-        window.code.textContent = snippet_context.code_snippet[0].content;
+        window.code.textContent = snippet_context.code_snippet.content;
 
-        window.stdout.textContent = snippet_context.code_snippet[0].std_out;
-        window.stderr.textContent = snippet_context.code_snippet[0].std_err;
+        window.snippet_object = snippet_context.code_snippet;
         
     </script>
 
@@ -447,8 +463,16 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(prediction_row),
-            }).catch
-            (error => {
+            })
+            .then(response => {
+                log_success("New prediction successfully posted!")
+                setTimeout(() => {
+                    console.log("LOADING NEW PAGE");
+                    // window.open("/")
+                    window.history.go("/")
+                }, 1000)
+            })
+            .catch(error => {
                 log_error("Failed to submit prediction.");
             });
         }
@@ -459,17 +483,35 @@
         // tag: logging
 
         // log to console and display toast
+        function log_success(success_string) {
+            console.log(success_string);
+            toast_success(success_string);
+        }
+        function toast_success(toast_string) {
+                var toast = document.getElementById("toast");
+                toast.textContent = toast_string;
+                toast.style.display = "flex";
+                toast.style.backgroundColor = "rgb(6, 78, 20)";
+                setTimeout(hide_toast, 4000);
+                function hide_toast() {
+                    toast.style.display = "none";
+                }
+            }
+
+        // log to console and display toast
         function log_error(error_string){
             console.error(error_string);
             toast_error(error_string);
         }
 
+
         function toast_error(toast_string){
             var toast = document.getElementById("toast");
             toast.textContent = toast_string;
             toast.style.display = "flex";
+            toast.style.backgroundColor = "rgb(85, 11, 11)";
 
-            setTimeout(hide_toast,5000);
+            setTimeout(hide_toast, 4000);
             function hide_toast(){
                 toast.style.display = "none";
             }
@@ -573,6 +615,13 @@
                 case "show-btn":
                     // console.log("correct_prediction =", correct_prediction)
                     showing = true;
+                    // document.getElementById(target_id).classList.add("selected");
+                    if (prediction_row.accuracy === -1 || prediction_row.snippet_rank === -1){
+                        // log_error("You must select ")
+                    }
+                    window.stdout.textContent = window.snippet_object.std_out;
+                    window.stderr.textContent = window.snippet_object.std_err;
+
                     break;
 
                 case "accuracy-1":
@@ -634,6 +683,7 @@
             if (prediction_row.snippet_rank!==-1 && prediction_row.accuracy!==-1 && showing!==-1){
                 console.log("SUBMIT ENABLED");
                 document.getElementById("play-submit").classList.add('show');
+                document.getElementById("play-submit").focus();
             }
         }
 

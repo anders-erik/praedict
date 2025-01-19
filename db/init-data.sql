@@ -18,8 +18,8 @@ INSERT INTO environment (   uuid,
                             type) VALUES
 
                         (   '43933abdee', 
-                            'anderserik/rust-u-d-1.84-1.0', 
-                            'rust-ubuntu-docker'
+                            'praedict/rust-bookworm-1.84_0', 
+                            'rust_1.84-bookworm-docker-#0'
                         );
 
 
@@ -48,12 +48,94 @@ fn main() {
     println!("pointer_x: {:?}", pointer_x);
 }', 
                             'rustc ./main.rs',
-                            '   
-x: 10
+'x: 10
 ref_x: 10
-pointer_x: 0x7ffd046a6444',
+pointer_x: 0x7ffd048e6604
+',
                             '',
                             'No Notes',
+                            3,
+                            '43933abdee',
+                            'ab947b3ad3');
+
+
+INSERT INTO code_snippet (  uuid, 
+                            title, 
+                            content, 
+                            run_command, 
+                            std_out, 
+                            std_err, 
+                            note, 
+                            quality_rank,
+
+                            environment_uuid, 
+                            source_uuid
+                        ) VALUES
+
+                        (   'ab3956104e',
+                            'Printing variables',
+                            '
+fn main() {
+    let x: u32 = 10;
+    let ref_x: &u32 = &x;
+    let pointer_x: *const u32 = &x;
+
+    println!("x: {x}");
+    println!("ref_x: {}", ref_x);
+    println!("pointer_x: {:?}", *pointer_x);
+}', 
+                            'rustc ./main.rs',
+                            '',
+                            'error[E0133]: dereference of raw pointer is unsafe and requires unsafe function or block
+ --> ./snippet/snippet.rs:8:33
+  |
+8 |     println!("pointer_x: {:?}", *pointer_x);
+  |                                 ^^^^^^^^^^ dereference of raw pointer
+  |
+  = note: raw pointers may be null, dangling or unaligned; they can violate aliasing rules and cause data races: all of these are undefined behavior
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0133`.
+',
+                            'Need unsafe to compile.',
+                            3,
+                            '43933abdee',
+                            'ab947b3ad3');
+
+
+INSERT INTO code_snippet (  uuid, 
+                            title, 
+                            content, 
+                            run_command, 
+                            std_out, 
+                            std_err, 
+                            note, 
+                            quality_rank,
+
+                            environment_uuid, 
+                            source_uuid
+                        ) VALUES
+
+                        (   'ab3956104e',
+                            'Printing variables',
+                            '
+fn main() {
+    let x: u32 = 10;
+    let ref_x: &u32 = &x;
+    let pointer_x: *const u32 = &x;
+
+    println!("x: {x}");
+    println!("ref_x: {}", ref_x);
+    println!("*pointer_x: {}", unsafe { *pointer_x } );
+}', 
+                            'rustc ./main.rs',
+                            'x: 10
+ref_x: 10
+*pointer_x: 10
+',
+                            '',
+                            'Compiles and run ok with unsafe block.',
                             3,
                             '43933abdee',
                             'ab947b3ad3');

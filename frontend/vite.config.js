@@ -4,6 +4,10 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         port: process.env.PORT || 5173, // Default port is 5173, can be overridden by environment variable
+        https: {
+            cert: "./cert/fullchain.pem",
+            key: "./cert/privkey.pem"
+        },
         proxy: {
             '/api': {
                 target: 'http://localhost:3000',
